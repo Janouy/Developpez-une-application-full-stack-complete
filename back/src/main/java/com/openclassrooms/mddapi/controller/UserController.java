@@ -1,11 +1,8 @@
 package com.openclassrooms.mddapi.controller;
 
-
 import com.openclassrooms.mddapi.dto.ProfileResponse;
 import com.openclassrooms.mddapi.dto.UpdateProfileRequest;
 import com.openclassrooms.mddapi.dto.UserResponse;
-import com.openclassrooms.mddapi.model.User;
-import com.openclassrooms.mddapi.repository.UserRepository;
 import com.openclassrooms.mddapi.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;

@@ -29,6 +29,22 @@ public class GlobalExceptionHandler {
                 ));
     }
 
+    @ExceptionHandler(AlreadySubscribedException.class)
+    public ResponseEntity<Map<String, Object>> handleAlreadySubscribed(AlreadySubscribedException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of(
+                "code", "409",
+                "message", ex.getMessage()
+        ));
+    }
+
+    @ExceptionHandler(SubjectNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleSubjectNotFound(SubjectNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
+                "code", "404",
+                "message", ex.getMessage()
+        ));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, Object>> handleValidation(MethodArgumentNotValidException ex) {
         Map<String, String> fieldErrors = new HashMap<>();
