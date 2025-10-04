@@ -14,7 +14,15 @@ import jakarta.persistence.ForeignKey;
 import jakarta.persistence.Lob;
 import org.hibernate.annotations.*;
 import java.time.Instant;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "posts", indexes = {
         @Index(name = "idx_subject", columnList = "subject_id"),
