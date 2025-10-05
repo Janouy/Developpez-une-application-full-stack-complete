@@ -9,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
-
+/** Service utilitaire pour générer et valider des JWT (HS256). */
 @Service
 public class JwtService {
 
@@ -17,6 +17,11 @@ public class JwtService {
     private final long expirationMs;
     private final String issuer;
 
+    /**
+     * @param secret clé HMAC (32+ octets recommandés pour HS256)
+     * @param expirationMs durée de vie du token en millisecondes
+     * @param issuer émetteur attendu (claim {@code iss})
+     */
     public JwtService(
             @Value("${app.jwt.secret}") String secret,
             @Value("${app.jwt.expiration-ms}") long expirationMs,
@@ -26,6 +31,11 @@ public class JwtService {
         this.issuer = issuer;
     }
 
+    /**
+     * Générer un JWT signé.
+     * @param subject sujet du token (ex: email)
+     * @return token compacté (JWS)
+     */
     public String generate(String subject) {
         long now = System.currentTimeMillis();
         return Jwts.builder()
@@ -37,6 +47,13 @@ public class JwtService {
                 .compact();
     }
 
+    /**
+     * Extraire le {@code sub} après validation (signature, expiration, issuer).
+     * @param token JWT compacté
+     * @return le subject du token
+     * @throws JwtException si le token est invalide/expiré/mal formé
+     * @throws IllegalArgumentException si le token est null/vide
+     */
     public String getSubject(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)

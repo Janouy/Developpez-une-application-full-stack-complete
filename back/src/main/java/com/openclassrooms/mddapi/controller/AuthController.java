@@ -11,20 +11,32 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/** Endpoints d'authentification (inscription, connexion). */
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
     private final AuthService service;
 
+    /** @param service service d'authentification */
     public AuthController(AuthService service) {
         this.service = service;
     }
 
+    /**
+     * Inscription ; renvoie un JWT.
+     * @param req payload d'inscription validé
+     * @return 200 OK avec le token et l'utilisateur
+     */
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody @Valid RegisterRequest req) {
         return ResponseEntity.ok(service.register(req));
     }
 
+    /**
+     * Connexion ; renvoie un JWT.
+     * @param req identifiants de connexion validés
+     * @return 200 OK avec le token et l'utilisateur
+     */
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@RequestBody @Valid LoginRequest req) {
         return ResponseEntity.ok(service.login(req));

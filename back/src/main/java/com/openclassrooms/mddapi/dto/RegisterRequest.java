@@ -5,6 +5,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+/**
+ * Payload d'inscription.
+ * @param name     nom d'affichage
+ * @param email    email de connexion (format valide)
+ * @param password mot de passe (validé : longueur, chiffre, minuscule, majuscule, spécial)
+ */
 public record RegisterRequest(@NotBlank(message = "Name is required")
                               @Size(min = 4, max = 30, message = "Name must be 4 to 30 chars")
                               String name,

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/** Endpoints des sujets (liste + subscribe/unsubscribe). */
 @RestController
 @RequestMapping("/api/subjects")
 public class SubjectController {
@@ -20,13 +21,20 @@ public class SubjectController {
     private final UserRepository userRepo;
     private final SubscriptionService subscriptionService;
 
-
+    /** @param service service des sujets
+     *  @param userRepo repository utilisateur
+     *  @param subscriptionService service d'abonnement */
     public SubjectController(SubjectService service, UserRepository userRepo, SubscriptionService subscriptionService) {
         this.service = service;
         this.userRepo = userRepo;
         this.subscriptionService = subscriptionService;
     }
 
+    /**
+     * Lister tous les sujets avec un flag d'abonnement pour l'utilisateur courant.
+     * @param principal utilisateur authentifié (peut être null → liste publique avec subscribed=false)
+     * @return 200 OK + liste des sujets
+     */
     @GetMapping
     public ResponseEntity<List<SubjectResponse>> getAll(
             @AuthenticationPrincipal UserDetails principal
@@ -40,6 +48,12 @@ public class SubjectController {
         return ResponseEntity.ok(service.findAllWithFlag(u.getId()));
     }
 
+    /**
+     * S'abonner à un sujet.
+     * @param subjectId id du sujet (>0)
+     * @param principal utilisateur authentifié
+     * @return 200 OK + {subjectId, subscribed:true}
+     */
     @PostMapping("/{subjectId}/subscribe")
     public ResponseEntity<?> subscribe(
             @PathVariable Long subjectId,
@@ -53,6 +67,12 @@ public class SubjectController {
 
     }
 
+    /**
+     * Se désabonner d'un sujet.
+     * @param subjectId id du sujet (>0)
+     * @param principal utilisateur authentifié
+     * @return 200 OK + {subjectId, subscribed:false}
+     */
     @DeleteMapping("/{subjectId}/subscribe")
     public ResponseEntity<?> unsubscribe(
             @PathVariable Long subjectId,

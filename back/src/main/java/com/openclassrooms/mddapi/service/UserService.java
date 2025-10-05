@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.openclassrooms.mddapi.error.UserNotFoundException;
 
+/** Service utilisateur (lecture profil, mise à jour profil). */
 @Service
 public class UserService {
 
@@ -17,17 +18,34 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
+    /** @param repo repo utilisateurs ; @param passwordEncoder encodeur de mots de passe ; @param jwtService service JWT */
     public UserService(UserRepository repo, PasswordEncoder passwordEncoder,JwtService jwtService) {
         this.repo = repo; this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
     }
 
+    /**
+     * Récupérer un utilisateur par email.
+     * @param email email de l'utilisateur
+     * @return profil utilisateur minimal (nom, email)
+     * @throws UserNotFoundException si l'utilisateur n'existe pas
+     */
     public UserResponse getByEmail(String email) {
         User u = repo.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User with email '" + email + "' not found"));
 
         return new UserResponse(u.getName(), u.getEmail());
     }
+
+    /**
+     * Mettre à jour le profil (name/email/password) de l'utilisateur authentifié.
+     * <p>Régénère un JWT si les credentials changent (email ou mot de passe).</p>
+     * @param authenticatedEmail email actuel issu du JWT
+     * @param req payload de mise à jour
+     * @return profil mis à jour, avec nouveau token si nécessaire (sinon {@code null})
+     * @throws UserNotFoundException si l'utilisateur n'existe pas
+     * @throws EmailAlreadyInUseException si le nouvel email est déjà utilisé
+     */
     public ProfileResponse updateProfile(String authenticatedEmail, UpdateProfileRequest req) {
         User user = repo.findByEmail(authenticatedEmail)
                 .orElseThrow(() -> new UserNotFoundException("User with email '" + authenticatedEmail + "' not found"));

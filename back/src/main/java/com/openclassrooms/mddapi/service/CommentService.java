@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/** Service des commentaires (création, lecture par post). */
 @Service
 public class CommentService {
 
@@ -22,6 +23,7 @@ public class CommentService {
     private final UserRepository userRepo;
     private final SubscriptionRepository subscriptionRepo;
 
+    /** @param commentRepo repo commentaires ; @param postRepo repo posts ; @param userRepo repo users ; @param subscriptionRepo repo abonnements */
     public CommentService(CommentRepository commentRepo, PostRepository postRepo,
                           UserRepository userRepo, SubscriptionRepository subscriptionRepo) {
         this.commentRepo = commentRepo;
@@ -30,6 +32,16 @@ public class CommentService {
         this.subscriptionRepo = subscriptionRepo;
     }
 
+    /**
+     * Créer un commentaire sur un post.
+     * @param email email de l'utilisateur authentifié
+     * @param postId id du post
+     * @param req payload de création (contenu)
+     * @return commentaire créé
+     * @throws UserNotFoundException si l'utilisateur n'existe pas
+     * @throws PostNotFoundException si le post n'existe pas
+     * @throws AccessDeniedException si l'utilisateur n'est pas abonné au subject du post
+     */
     @Transactional
     public CommentResponse add(String email, Long postId, CreateCommentRequest req) {
         User user = userRepo.findByEmail(email)
@@ -58,6 +70,16 @@ public class CommentService {
         );
     }
 
+    /**
+     * Lister les commentaires d'un post (asc/desc) si l'utilisateur est abonné.
+     * @param email email de l'utilisateur authentifié
+     * @param postId id du post
+     * @param newestFirst {@code true} = tri décroissant, sinon croissant
+     * @return liste de commentaires
+     * @throws UserNotFoundException si l'utilisateur n'existe pas
+     * @throws PostNotFoundException si le post n'existe pas
+     * @throws AccessDeniedException si l'utilisateur n'est pas abonné au subject du post
+     */
     public List<CommentResponse> getForPost(String email, Long postId, boolean newestFirst) {
         User user = userRepo.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User with email '" + email + "' not found"));

@@ -6,6 +6,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+/**
+ * Payload de mise à jour du profil.
+ * @param name        nouveau nom (requis)
+ * @param email       nouvel email (requis, format valide)
+ * @param newPassword nouveau mot de passe (optionnel ; s'il est fourni, contraintes longueur + complexité)
+ */
 public record UpdateProfileRequest(
         @NotBlank(message = "Name is required")
         @Size(min = 4, max = 30, message = "Name must be 4 to 30 chars")

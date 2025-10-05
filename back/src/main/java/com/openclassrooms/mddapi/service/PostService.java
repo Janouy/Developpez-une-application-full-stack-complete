@@ -2,7 +2,6 @@ package com.openclassrooms.mddapi.service;
 
 import com.openclassrooms.mddapi.dto.CreatePostRequest;
 import com.openclassrooms.mddapi.dto.PostResponse;
-import com.openclassrooms.mddapi.dto.UserResponse;
 import com.openclassrooms.mddapi.error.PostNotFoundException;
 import com.openclassrooms.mddapi.error.SubjectNotFoundException;
 import com.openclassrooms.mddapi.error.UserNotFoundException;
@@ -14,9 +13,9 @@ import com.openclassrooms.mddapi.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 
+/** Service des posts (feed, lecture, création). */
 @Service
 public class PostService {
 
@@ -24,12 +23,19 @@ public class PostService {
     private final UserRepository userRepo;
     private final SubjectRepository subjectRepo;
 
+    /** @param postRepo repo posts ; @param userRepo repo users ; @param subjectRepo repo subjects */
     public PostService(PostRepository postRepo, UserRepository userRepo, SubjectRepository subjectRepo) {
         this.postRepo = postRepo;
         this.userRepo = userRepo;
         this.subjectRepo = subjectRepo;
     }
 
+    /**
+     * Retourner le feed des posts (subjects suivis), du plus récent au plus ancien.
+     * @param authenticatedEmail email de l'utilisateur authentifié
+     * @return liste de posts triés décroissant par date
+     * @throws UserNotFoundException si l'utilisateur n'existe pas
+     */
     @Transactional(readOnly = true)
     public List<PostResponse> getFeedForUser(String authenticatedEmail) {
         User u = userRepo.findByEmail(authenticatedEmail)
@@ -48,6 +54,14 @@ public class PostService {
                 .toList();
     }
 
+    /**
+     * Retourner un post par son id (règle d'accès selon ta politique).
+     * @param authenticatedEmail email de l'utilisateur authentifié
+     * @param postId identifiant du post
+     * @return post demandé
+     * @throws UserNotFoundException si l'utilisateur n'existe pas
+     * @throws PostNotFoundException si le post n'existe pas
+     */
     @Transactional(readOnly = true)
     public PostResponse getOneForUser(String authenticatedEmail, Long postId) {
         var user = userRepo.findByEmail(authenticatedEmail)
@@ -66,6 +80,14 @@ public class PostService {
         );
     }
 
+    /**
+     * Créer un post dans un subject existant (auteur = user connecté).
+     * @param authenticatedEmail email de l'utilisateur authentifié
+     * @param req payload de création (subjectId, title, content)
+     * @return post créé
+     * @throws UserNotFoundException si l'utilisateur n'existe pas
+     * @throws SubjectNotFoundException si le subject n'existe pas
+     */
     @Transactional
     public PostResponse create(String authenticatedEmail, CreatePostRequest req) {
         var user = userRepo.findByEmail(authenticatedEmail)

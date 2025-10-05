@@ -7,15 +7,23 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 
+/** Adaptateur Spring Security pour charger un utilisateur par email. */
 @Service
 public class AppUserDetailsService implements UserDetailsService {
 
     private final UserRepository repo;
 
+    /** @param repo repository utilisateur */
     public AppUserDetailsService(UserRepository repo) {
         this.repo = repo;
     }
 
+    /**
+     * Charger un utilisateur par email pour l'authentification.
+     * @param email email de l'utilisateur
+     * @return {@link UserDetails} utilisé par Spring Security
+     * @throws UsernameNotFoundException si aucun utilisateur n'existe pour cet email
+     */
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User u = repo.findByEmail(email)

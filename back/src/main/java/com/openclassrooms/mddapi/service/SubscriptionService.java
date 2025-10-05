@@ -8,6 +8,7 @@ import com.openclassrooms.mddapi.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/** Service des abonnements (subscribe / unsubscribe). */
 @Service
 public class SubscriptionService {
 
@@ -15,12 +16,21 @@ public class SubscriptionService {
     private final SubjectRepository subjectRepo;
     private final SubscriptionRepository subscriptionRepo;
 
+    /** @param userRepo repo utilisateurs ; @param subjectRepo repo sujets ; @param subscriptionRepo repo abonnements */
     public SubscriptionService(UserRepository userRepo, SubjectRepository subjectRepo, SubscriptionRepository subscriptionRepo) {
         this.userRepo = userRepo;
         this.subjectRepo = subjectRepo;
         this.subscriptionRepo = subscriptionRepo;
     }
 
+    /**
+     * Abonner l'utilisateur au sujet.
+     * @param authenticatedEmail email de l'utilisateur authentifié
+     * @param subjectId id du sujet
+     * @throws UserNotFoundException si l'utilisateur n'existe pas
+     * @throws SubjectNotFoundException si le sujet n'existe pas
+     * @throws AlreadySubscribedException si l'utilisateur est déjà abonné
+     */
     @Transactional
     public void subscribe(String authenticatedEmail, Long subjectId) {
         var user = userRepo.findByEmail(authenticatedEmail)
@@ -41,6 +51,13 @@ public class SubscriptionService {
         subscriptionRepo.save(sub);
     }
 
+    /**
+     * Désabonner l'utilisateur du sujet (idempotent).
+     * @param authenticatedEmail email de l'utilisateur authentifié
+     * @param subjectId id du sujet
+     * @throws UserNotFoundException si l'utilisateur n'existe pas
+     * @throws SubjectNotFoundException si le sujet n'existe pas
+     */
     @Transactional
     public void unsubscribe(String authenticatedEmail, Long subjectId) {
         var user = userRepo.findByEmail(authenticatedEmail)
