@@ -34,5 +34,10 @@ public class Subject {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
+
+    @OneToMany(mappedBy = "subject", cascade = CascadeType.ALL, orphanRemoval = true)
+    private java.util.Set<Subscription> subscriptions = new java.util.HashSet<>();
+
+
 }
 
