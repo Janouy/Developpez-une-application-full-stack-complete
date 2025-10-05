@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/** Configuration Spring Security. */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -26,12 +27,18 @@ public class SecurityConfig {
     private final AppUserDetailsService uds;
     private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
+    /** @param jwtAuthFilter filtre JWT ; @param uds chargeur d'utilisateurs ; @param restAuthenticationEntryPoint 401 JSON */
     public SecurityConfig(JwtAuthFilter jwtAuthFilter, AppUserDetailsService uds, RestAuthenticationEntryPoint restAuthenticationEntryPoint) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.uds = uds;
         this.restAuthenticationEntryPoint = restAuthenticationEntryPoint;
     }
 
+    /**
+     * Chaîne de filtres HTTP (CORS, CSRF off, stateless, JWT, règles d'accès).
+     * @param http builder HttpSecurity
+     * @return la SecurityFilterChain configurée
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -50,6 +57,10 @@ public class SecurityConfig {
                 .build();
     }
 
+    /**
+     * Provider d'authentification basé sur UserDetailsService + BCrypt.
+     * @return AuthenticationProvider DAO
+     */
     @Bean
     public AuthenticationProvider daoAuthProvider() {
         DaoAuthenticationProvider p = new DaoAuthenticationProvider();
@@ -58,11 +69,17 @@ public class SecurityConfig {
         return p;
     }
 
+    /** @return encodeur de mots de passe BCrypt */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Manager d'authentification exposé par Spring.
+     * @param cfg configuration d'authentification
+     * @return AuthenticationManager
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration cfg) throws Exception {
         return cfg.getAuthenticationManager();

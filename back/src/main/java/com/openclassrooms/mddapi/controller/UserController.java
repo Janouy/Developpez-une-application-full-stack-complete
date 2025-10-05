@@ -10,21 +10,34 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+/** Endpoints utilisateur (profil courant). */
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
 
     private final UserService service;
 
+    /** @param service service utilisateur */
     public UserController(UserService service) {
         this.service = service;
     }
 
+    /**
+     * Récupérer le profil de l'utilisateur connecté.
+     * @param principal utilisateur authentifié (JWT)
+     * @return 200 OK + profil (nom, email)
+     */
     @GetMapping("/me")
     public ResponseEntity<UserResponse> me(@AuthenticationPrincipal UserDetails principal) {
         return ResponseEntity.ok(service.getByEmail(principal.getUsername()));
     }
 
+    /**
+     * Mettre à jour le profil (name/email/password) de l'utilisateur connecté.
+     * @param principal utilisateur authentifié
+     * @param req payload de mise à jour (validé)
+     * @return 200 OK + profil mis à jour (et éventuellement nouveau token)
+     */
     @PatchMapping("/me")
     public ResponseEntity<ProfileResponse> updateMe(
             @AuthenticationPrincipal UserDetails principal,

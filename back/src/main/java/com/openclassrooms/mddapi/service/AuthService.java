@@ -11,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+/** Service d'authentification (register, login, génération JWT). */
 @Service
 public class AuthService {
 
@@ -19,10 +20,17 @@ public class AuthService {
     private final JwtService jwt;
     private final AuthenticationManager authManager;
 
+    /** @param repo repository user ; @param encoder hash des mots de passe ; @param jwt service JWT ; @param am auth manager */
     public AuthService(UserRepository repo, PasswordEncoder encoder, JwtService jwt, AuthenticationManager am) {
         this.repo = repo; this.encoder = encoder; this.jwt = jwt; this.authManager = am;
     }
 
+    /**
+     * Inscrire un nouvel utilisateur et renvoyer un JWT.
+     * @param req données d'inscription (name, email, password)
+     * @return réponse contenant le token
+     * @throws EmailAlreadyInUseException si l'email est déjà utilisé
+     */
     public AuthResponse register(RegisterRequest req) {
         if (repo.existsByEmail(req.email())) {
             throw new EmailAlreadyInUseException();
@@ -39,6 +47,12 @@ public class AuthService {
         return new AuthResponse(token);
     }
 
+    /**
+     * Authentifier un utilisateur et renvoyer un JWT.
+     * @param req identifiants (email, password)
+     * @return réponse contenant le token
+     * @throws AuthenticationException si les identifiants sont invalides
+     */
     public AuthResponse login(LoginRequest req) {
         authManager.authenticate(new UsernamePasswordAuthenticationToken(req.email(), req.password()));
         var user = repo.findByEmail(req.email()).orElseThrow();

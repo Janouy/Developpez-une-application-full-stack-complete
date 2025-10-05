@@ -12,21 +12,34 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/** Endpoints des posts (feed, lecture, création). */
 @RestController
 @RequestMapping("/api/posts")
 public class PostController {
 
     private final PostService postService;
 
+    /** @param postService service métier des posts */
     public PostController(PostService postService) {
         this.postService = postService;
     }
 
+    /**
+     * Récupérer le feed des posts (subjects suivis), du plus récent au plus ancien.
+     * @param principal utilisateur authentifié (JWT)
+     * @return 200 OK + liste de posts
+     */
     @GetMapping("/feed")
     public ResponseEntity<List<PostResponse>> getMyFeed(@AuthenticationPrincipal UserDetails principal) {
         return ResponseEntity.ok(postService.getFeedForUser(principal.getUsername()));
     }
 
+    /**
+     * Récupérer un post par son id (si abonné au subject du post).
+     * @param id id du post (> 0)
+     * @param principal utilisateur authentifié
+     * @return 200 OK + post ; 403 si non abonné ; 404 si introuvable
+     */
     @GetMapping("/{id}")
     public ResponseEntity<PostResponse> getById(
             @PathVariable @Positive Long id,
@@ -35,6 +48,12 @@ public class PostController {
         return ResponseEntity.ok(postService.getOneForUser(principal.getUsername(), id));
     }
 
+    /**
+     * Créer un post dans un subject existant (auteur = user connecté).
+     * @param principal utilisateur authentifié
+     * @param req payload de création (subjectId, title, content)
+     * @return 201 Created + post créé (Location: /api/posts/{id})
+     */
     @PostMapping()
     public ResponseEntity<PostResponse> create(
             @AuthenticationPrincipal UserDetails principal,
