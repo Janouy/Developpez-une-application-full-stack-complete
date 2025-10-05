@@ -2,6 +2,7 @@ package com.openclassrooms.mddapi.error;
 
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.*;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +50,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
                 "code", "404",
                 "message", ex.getMessage()
+        ));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleAccessDenied(AccessDeniedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of(
+                "code", "403", "message", "Forbidden: insufficient permissions"
         ));
     }
     @ExceptionHandler(MethodArgumentNotValidException.class)
