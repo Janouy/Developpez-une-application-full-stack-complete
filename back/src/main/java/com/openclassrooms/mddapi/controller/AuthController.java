@@ -3,8 +3,10 @@ package com.openclassrooms.mddapi.controller;
 import com.openclassrooms.mddapi.dto.AuthResponse;
 import com.openclassrooms.mddapi.dto.LoginRequest;
 import com.openclassrooms.mddapi.dto.RegisterRequest;
+import com.openclassrooms.mddapi.response.ApiResponse;
 import com.openclassrooms.mddapi.service.AuthService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,11 +27,12 @@ public class AuthController {
     /**
      * Inscription ; renvoie un JWT.
      * @param req payload d'inscription validé
-     * @return 200 OK avec le token et l'utilisateur
+     * @return 200 OK avec un message de succés
      */
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody @Valid RegisterRequest req) {
-        return ResponseEntity.ok(service.register(req));
+    public ResponseEntity<ApiResponse> register(@RequestBody @Valid RegisterRequest req) {
+        ApiResponse response = service.register(req);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     /**
