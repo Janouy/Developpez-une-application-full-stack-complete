@@ -6,6 +6,8 @@ import com.openclassrooms.mddapi.dto.RegisterRequest;
 import com.openclassrooms.mddapi.error.EmailAlreadyInUseException;
 import com.openclassrooms.mddapi.model.User;
 import com.openclassrooms.mddapi.repository.UserRepository;
+import com.openclassrooms.mddapi.response.ApiResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,10 +30,10 @@ public class AuthService {
     /**
      * Inscrire un nouvel utilisateur et renvoyer un JWT.
      * @param req données d'inscription (name, email, password)
-     * @return réponse contenant le token
+     * @return réponse contenant la réponse de l'api
      * @throws EmailAlreadyInUseException si l'email est déjà utilisé
      */
-    public AuthResponse register(RegisterRequest req) {
+    public ApiResponse register(RegisterRequest req) {
         if (repo.existsByEmail(req.email())) {
             throw new EmailAlreadyInUseException();
         }
@@ -43,8 +45,7 @@ public class AuthService {
 
         repo.save(user);
 
-        String token = jwt.generate(user.getEmail());
-        return new AuthResponse(token);
+        return new ApiResponse(HttpStatus.CREATED.value(), "User registered successfully");
     }
 
     /**
