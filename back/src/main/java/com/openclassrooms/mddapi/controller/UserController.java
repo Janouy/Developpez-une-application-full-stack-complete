@@ -29,7 +29,7 @@ public class UserController {
      */
     @GetMapping("/me")
     public ResponseEntity<UserResponse> me(@AuthenticationPrincipal UserDetails principal) {
-        return ResponseEntity.ok(service.getByEmail(principal.getUsername()));
+        return ResponseEntity.ok(service.getByLogin(principal.getUsername()));
     }
 
     /**

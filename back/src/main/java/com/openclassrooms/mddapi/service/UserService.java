@@ -25,14 +25,15 @@ public class UserService {
     }
 
     /**
-     * Récupérer un utilisateur par email.
-     * @param email email de l'utilisateur
+     * Récupérer un utilisateur par email ou nom.
+     * @param login email ou nom de l'utilisateur
      * @return profil utilisateur minimal (nom, email)
      * @throws UserNotFoundException si l'utilisateur n'existe pas
      */
-    public UserResponse getByEmail(String email) {
-        User u = repo.findByEmail(email)
-                .orElseThrow(() -> new UserNotFoundException("User with email '" + email + "' not found"));
+    public UserResponse getByLogin(String login) {
+        User u = repo.findByEmail(login)
+                .or(() -> repo.findByName(login))
+                .orElseThrow(() -> new UserNotFoundException("User with login info '" + login + "' not found"));
 
         return new UserResponse(u.getName(), u.getEmail());
     }
