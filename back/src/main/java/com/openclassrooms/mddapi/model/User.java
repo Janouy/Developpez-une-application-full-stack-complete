@@ -12,7 +12,8 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "users", uniqueConstraints = {
-        @UniqueConstraint(name = "uq_users_email", columnNames = "email")
+        @UniqueConstraint(name = "uq_users_email", columnNames = "email"),
+        @UniqueConstraint(name = "uq_users_name", columnNames = "name")
 })
 
 public class User {

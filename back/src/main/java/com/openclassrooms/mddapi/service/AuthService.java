@@ -34,7 +34,7 @@ public class AuthService {
      * @throws EmailAlreadyInUseException si l'email est déjà utilisé
      */
     public ApiResponse register(RegisterRequest req) {
-        if (repo.existsByEmail(req.email())) {
+        if (repo.existsByEmail(req.email()) || repo.existsByName(req.name())) {
             throw new EmailAlreadyInUseException();
         }
 
@@ -50,14 +50,16 @@ public class AuthService {
 
     /**
      * Authentifier un utilisateur et renvoyer un JWT.
-     * @param req identifiants (email, password)
+     * @param req identifiants (email ou nom, password)
      * @return réponse contenant le token
      * @throws AuthenticationException si les identifiants sont invalides
      */
     public AuthResponse login(LoginRequest req) {
-        authManager.authenticate(new UsernamePasswordAuthenticationToken(req.email(), req.password()));
-        var user = repo.findByEmail(req.email()).orElseThrow();
-        String token = jwt.generate(user.getEmail());
+        authManager.authenticate(new UsernamePasswordAuthenticationToken(req.login(), req.password()));
+
+        var user = repo.findByEmail(req.login()).or(() -> repo.findByName(req.login())).orElseThrow();
+
+        String token = jwt.generate(user.getName() != null ? user.getName() : user.getEmail());
         return new AuthResponse(token);
     }
 }

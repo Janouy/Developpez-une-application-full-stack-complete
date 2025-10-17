@@ -1,6 +1,11 @@
-<div class="center">
-  <img src="assets/logo_p6.png" alt="logo" />
-  <h1 class="text-3xl">Welcome to MDD</h1>
-
-  <button (click)="start()">Commencer</button>
+<div class="flex justify-center items-start h-screen">
+  <div class="h-64 md:h-screen flex flex-col items-center justify-around md:justify-center gap-1 text-center">
+    <img src="/assets/logo_p6.png" alt="logo" class="w-sm sm:w-lg lg:w-xl" />
+    <div class="flex flex-col gap-2 w-64 md:flex-row">
+      <button class="border px-4 py-2 rounded-md hover:bg-blue-700 transition" (click)="goToLoginPage()">Se
+        connecter</button>
+      <button class="border px-4 py-2 rounded-md hover:bg-blue-700 transition"
+        (click)="goToRegisterPage()">S'inscrire</button>
+    </div>
+  </div>
 </div>

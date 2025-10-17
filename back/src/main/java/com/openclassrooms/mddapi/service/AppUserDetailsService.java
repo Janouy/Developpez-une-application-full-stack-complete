@@ -20,13 +20,13 @@ public class AppUserDetailsService implements UserDetailsService {
 
     /**
      * Charger un utilisateur par email pour l'authentification.
-     * @param email email de l'utilisateur
+     * @param login email ou nom de l'utilisateur
      * @return {@link UserDetails} utilisé par Spring Security
      * @throws UsernameNotFoundException si aucun utilisateur n'existe pour cet email
      */
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User u = repo.findByEmail(email)
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        User u = repo.findByEmail(login).or(()-> repo.findByName(login))
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         return org.springframework.security.core.userdetails.User
