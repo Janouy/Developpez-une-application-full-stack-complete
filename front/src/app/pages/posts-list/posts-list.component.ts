@@ -7,6 +7,7 @@ import { Post } from '../../interfaces/post.interface';
 import { PostsService } from '../../services/posts.service';
 import { PostComponent } from '../../components/post/post.component';
 import { HeaderComponent } from '../../components/header/header.component';
+import { LoaderComponent } from '../../components/loader/loader.component';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
 
@@ -18,6 +19,7 @@ import { faArrowDown, faArrowUp } from '@fortawesome/free-solid-svg-icons';
     HeaderComponent,
     FaIconComponent,
     RouterLink,
+    LoaderComponent,
   ],
   templateUrl: './posts-list.component.html',
   styleUrl: './posts-list.component.scss',

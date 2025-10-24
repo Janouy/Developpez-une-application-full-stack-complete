@@ -1,0 +1,23 @@
+<div class="pt-4 px-4 rounded-lg bg-[#F5F5F5] h-full">
+    <h2 class="font-semibold mb-2">{{ subject.name }}</h2>
+    <p class="text-sm">
+        {{subject.description}}
+    </p>
+    <div class="text-center mt-5">
+        <button (click)="onSubscribe(subject.id)" [disabled]="subject.subscribed" type="submit" class="rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
+           transition-colors" [ngClass]="subject.subscribed
+      ? 'bg-[#7763C5] hover:bg-[#6b57bf] focus-visible:ring-[#7763C5]'
+      : 'bg-[#939393] hover:bg-[#7a7a7a] focus-visible:ring-[#939393]'">
+            @if (subject.subscribed) {
+            Déjà abonné
+            } @else {
+            S'abonner
+            }
+        </button>
+    </div>
+    <div class="h-4 mt-1 text-sm text-red-600 text-center">@if(onError){
+        Une erreur est survenue
+        }
+    </div>
+</div>

@@ -1,0 +1,17 @@
+<app-header />
+<div class="flex justify-center">
+    <div class="m-12 mt-6 w-full lg:max-w-[1400px]">
+        @if (subjects$ | async; as subjects) {
+        @if (subjects.length > 0) {
+        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+            <app-subject *ngFor="let subject of subjects$ | async" [subject]="subject"
+                (onSubscribing)="onSubscribing()" />
+        </div>
+        }@else{
+        <div>Aucun article disponible</div>
+        }
+        }@else{
+        <app-loader />
+        }
+    </div>
+</div>
