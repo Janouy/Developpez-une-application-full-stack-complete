@@ -1,0 +1,13 @@
+<app-header />
+<app-back-arrow />
+<div class="flex justify-center">
+    @if (post$ | async; as post) {
+    <div class="mx-6 lg:max-w-[1400px]">
+        <div class="flex flex-col justify-between my-4">
+            <app-post [post]="post" [showSubject]="true" background="bg-white" content="overflow-y-scroll h-80 mt-3" />
+            <div class="border-b mx-5"></div>
+            <app-comments [postId]="postId" />
+        </div>
+    </div>
+    }
+</div>

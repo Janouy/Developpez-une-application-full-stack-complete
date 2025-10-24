@@ -9,7 +9,9 @@ import com.openclassrooms.mddapi.model.Post;
 import com.openclassrooms.mddapi.model.User;
 import com.openclassrooms.mddapi.repository.PostRepository;
 import com.openclassrooms.mddapi.repository.SubjectRepository;
+import com.openclassrooms.mddapi.repository.SubscriptionRepository;
 import com.openclassrooms.mddapi.repository.UserRepository;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,12 +24,14 @@ public class PostService {
     private final PostRepository postRepo;
     private final UserRepository userRepo;
     private final SubjectRepository subjectRepo;
+    private final SubscriptionRepository subscriptionRepo;
 
     /** @param postRepo repo posts ; @param userRepo repo users ; @param subjectRepo repo subjects */
-    public PostService(PostRepository postRepo, UserRepository userRepo, SubjectRepository subjectRepo) {
+    public PostService(PostRepository postRepo, UserRepository userRepo, SubjectRepository subjectRepo, SubscriptionRepository subscriptionRepo) {
         this.postRepo = postRepo;
         this.userRepo = userRepo;
         this.subjectRepo = subjectRepo;
+        this.subscriptionRepo = subscriptionRepo;
     }
 
     /**
@@ -95,6 +99,11 @@ public class PostService {
 
         var subject = subjectRepo.findById(req.subjectId())
                 .orElseThrow(() -> new SubjectNotFoundException("Subject with id '" + req.subjectId() + "' not found"));
+
+        boolean subscribed = subscriptionRepo.existsByUser_IdAndSubject_Id(user.getId(), subject.getId());
+        if (!subscribed) {
+            throw new AccessDeniedException("User " + user.getId() + " is not subscribed to subject " + subject.getId());
+        }
 
         var post = new Post();
         post.setUser(user);
