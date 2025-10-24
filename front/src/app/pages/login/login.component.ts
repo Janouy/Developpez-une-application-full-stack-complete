@@ -29,7 +29,7 @@ import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   faEye = faEye;
   faEyeSlash = faEyeSlash;
   loginForm!: FormGroup;

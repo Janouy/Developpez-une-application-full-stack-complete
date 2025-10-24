@@ -65,20 +65,22 @@ export class RegisterComponent implements OnInit {
 
   onRegister(): void {
     if (this.registerForm.invalid) return;
+
     const registerRequest = this.registerForm.value as RegisterRequest;
+
     this.authService.register(registerRequest).subscribe({
-      next: (_: void) => {
-        const { email, password } = this.registerForm.value;
-        this.authService.login({ email, password }).subscribe({
+      next: () => {
+        const login = this.registerForm.value.email;
+        const password = this.registerForm.value.password;
+        this.authService.login({ login, password }).subscribe({
           next: (response) => {
             this.authService.saveToken(response);
             this.router.navigate(['/posts']);
           },
-          error: (_) => (this.onError = true),
+          error: () => (this.onError = true),
         });
-        this.router.navigate(['/login']);
       },
-      error: (_) => (this.onError = true),
+      error: () => (this.onError = true),
     });
   }
 }

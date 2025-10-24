@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 import { LoginRequest } from '../interfaces/loginRequest.interface';
 import { RegisterRequest } from '../interfaces/registerRequest.interface';
 import { Session } from '../interfaces/session.interface';
@@ -10,15 +11,17 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class AuthService {
-  private token!: string;
   private pathService = environment.apiUrl;
-  public isLogged = false;
   public session: Session | undefined;
 
-  constructor(private httpClient: HttpClient) {}
+  private _token = signal<string | null>(this.getToken());
 
-  public getToken(): string {
-    return this.token;
+  isLoggedIn = computed(() => !!this._token());
+
+  constructor(private httpClient: HttpClient, private router: Router) {}
+
+  public getToken(): string | null {
+    return localStorage.getItem('token');
   }
 
   public register(registerRequest: RegisterRequest): Observable<void> {
@@ -34,9 +37,14 @@ export class AuthService {
       loginRequest
     );
   }
+  public logout(): void {
+    localStorage.removeItem('token');
+    this._token.set(null);
+    this.router.navigate(['']);
+  }
 
   public saveToken(session: Session): void {
     localStorage.setItem('token', session.token);
-    this.isLogged = true;
+    this._token.set(session.token);
   }
 }

@@ -1,0 +1,53 @@
+<app-header />
+<app-back-arrow />
+<div class="flex justify-center">
+    <form [formGroup]="postForm" (ngSubmit)="onAddPost()" class="flex flex-col m-12 mt-6 lg:max-w-[1400px]">
+
+        <div class="font-bold text-2xl">Créer un nouvel article</div>
+
+        <div class="form-group  mt-10">
+            <div
+                class="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-[#7763C5] focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-[#7763C5]">
+                <select formControlName="subjectId" class="block w-full rounded-md border-none bg-white px-3 py-2 text-gray-900 
+                                focus:outline-none focus:ring-0 focus:border-none">
+                    <option value="" disabled selected class="text-[#939393]">
+                        Sélectionner un thème
+                    </option>
+                    @if (subjects$ | async; as subjects) {
+                    @if (subjects.length > 0) {
+                    <option *ngFor="let subject of subjects" [value]="subject.id">{{subject.name}}</option>
+                    }}
+                </select>
+            </div>
+        </div>
+        <div class="form-group mt-10">
+            <div
+                class="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-[#7763C5] focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-[#7763C5]">
+                <input placeholder="Titre de l'article" id="title" type="text" name="title" formControlName="title"
+                    autocomplete="current-title"
+                    class="block min-w-0 grow bg-white py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-[#939393] focus:outline-none sm:text-sm/6" />
+            </div>
+        </div>
+        <div class="form-group mt-10">
+            <div
+                class="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-[#7763C5] focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-[#7763C5]">
+                <textarea placeholder="Contenu de l'article" id="content" type="text" name="content"
+                    formControlName="content" autocomplete="current-content"
+                    class="block min-w-0 min-h-50 resize-y bg-white py-1.5 pr-3 pl-1 text-base text-gray-900 placeholder:text-[#939393] focus:outline-none sm:text-sm/6"></textarea>
+            </div>
+        </div>
+        <div class="flex justify-center w-full mt-10">
+            <button type="submit"
+                class="cursor-pointer rounded-md bg-[#7763C5] px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7763C5] w-1/2"
+                [disabled]="postForm.invalid">
+                Créer
+            </button>
+        </div>
+        <div class="h-5 mt-1 text-sm text-red-600 text-center">
+            @if(onError){
+            Création impossible
+            }
+        </div>
+    </form>
+
+</div>

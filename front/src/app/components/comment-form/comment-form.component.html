@@ -1,0 +1,14 @@
+<form [formGroup]="commentForm" (ngSubmit)="onAddComment()" class="flex m-5 w-[90%] mx-auto">
+    <textarea placeholder="Écrivez ici votre commentaire…" formControlName="content"
+        class="w-full min-h-28 resize-y border rounded-md p-2"></textarea>
+
+    <button type="submit" class="shrink-0 cursor-pointer p-2 disabled:opacity-50" [disabled]="commentForm.invalid">
+        <fa-icon [icon]="faPaperPlane" class="text-5xl text-[#7763C5]"></fa-icon>
+    </button>
+</form>
+
+<div class="h-5 mt-1 text-sm text-red-600 text-center">
+    @if (onError) {
+    Envoi impossible
+    }
+</div>
