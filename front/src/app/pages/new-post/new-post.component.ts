@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   ReactiveFormsModule,
@@ -9,8 +9,8 @@ import {
 import { Router } from '@angular/router';
 import { BackArrowComponent } from '../../components/back-arrow/back-arrow.component';
 import { HeaderComponent } from '../../components/header/header.component';
-import { Observable, map } from 'rxjs';
-import { Subject } from '../../interfaces/subject.interface';
+import { Observable, map, Subject } from 'rxjs';
+import { SubjectInterface } from '../../interfaces/subjectInterface.interface';
 import { PostRequest } from '../../interfaces/postRequest.interface';
 import { SubjectService } from '../../services/subjects.service';
 import { PostsService } from '../../services/posts.service';
@@ -27,10 +27,12 @@ import { PostsService } from '../../services/posts.service';
   templateUrl: './new-post.component.html',
   styleUrl: './new-post.component.scss',
 })
-export class NewPostComponent implements OnInit {
+export class NewPostComponent implements OnInit, OnDestroy {
   postForm!: FormGroup;
   onError = false;
-  subjects$!: Observable<Subject[]>;
+  subjects$!: Observable<SubjectInterface[]>;
+
+  private destroy$!: Subject<boolean>;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -38,7 +40,9 @@ export class NewPostComponent implements OnInit {
     private postsService: PostsService,
     private router: Router
   ) {}
+
   ngOnInit(): void {
+    this.destroy$ = new Subject<boolean>();
     this.postForm = this.formBuilder.group({
       subjectId: ['', [Validators.required]],
       title: [null, [Validators.required]],
@@ -46,9 +50,15 @@ export class NewPostComponent implements OnInit {
     });
     this.subjects$ = this.subjectService
       .getSubjects()
-      .pipe(map((subjects: Subject[]) => subjects.filter((s) => s.subscribed)));
+      .pipe(
+        map((subjects: SubjectInterface[]) =>
+          subjects.filter((s) => s.subscribed)
+        )
+      );
   }
-
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+  }
   onAddPost(): void {
     if (this.postForm.invalid) return;
     const postRequest = this.postForm.value as PostRequest;
