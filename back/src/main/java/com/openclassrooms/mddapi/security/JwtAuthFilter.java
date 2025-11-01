@@ -47,8 +47,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (StringUtils.hasText(header) && header.startsWith("Bearer ")) {
             String token = header.substring(7);
             try {
-                String email = jwtService.getSubject(token);
-                var userDetails = userDetailsService.loadUserByUsername(email);
+                Long userId = jwtService.getUserId(token);
+                var userDetails = userDetailsService.loadUserById(userId);
 
                 var auth = new UsernamePasswordAuthenticationToken(
                         userDetails,

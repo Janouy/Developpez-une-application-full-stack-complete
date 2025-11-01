@@ -1,4 +1,4 @@
-<div class="p-4 rounded-lg cursor-pointer h-full" [ngClass]="background" (click)="onViewPost()">
+<div class="p-4 rounded-lg cursor-pointer h-full w-full" [ngClass]="background" (click)="onViewPost()">
     <h2 class="font-semibold mb-2">{{ post.title }}</h2>
     <div class="flex flex-wrap md:flex-nowrap items-center">
         <div class="grow md:grow-0 md:w-1/4 my-3">{{ post.createdAt | date: 'dd/MM/YYYY' }}</div>

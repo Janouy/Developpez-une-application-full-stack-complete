@@ -59,7 +59,7 @@ public class AuthService {
 
         var user = repo.findByEmail(req.login()).or(() -> repo.findByName(req.login())).orElseThrow();
 
-        String token = jwt.generate(user.getName() != null ? user.getName() : user.getEmail());
+        String token = jwt.generate(user.getId());
         return new AuthResponse(token);
     }
 }

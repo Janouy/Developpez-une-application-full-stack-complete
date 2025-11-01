@@ -33,7 +33,6 @@ export class RegisterComponent implements OnInit {
   faEyeSlash = faEyeSlash;
   registerForm!: FormGroup;
   onError = false;
-  emailRegex!: RegExp;
   passwordRegex!: RegExp;
   hidePassword!: Boolean;
   constructor(
@@ -43,17 +42,13 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     this.passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&._\-])[A-Za-z\d@$!%*?&._\-]{8,}$/;
     this.hidePassword = true;
     this.registerForm = this.formBuilder.group(
       {
         name: [null, [Validators.required, Validators.minLength(4)]],
-        email: [
-          null,
-          [Validators.required, Validators.pattern(this.emailRegex)],
-        ],
+        email: [null, [Validators.required, Validators.email]],
         password: [
           null,
           [Validators.required, Validators.pattern(this.passwordRegex)],

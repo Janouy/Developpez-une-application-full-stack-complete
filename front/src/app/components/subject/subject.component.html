@@ -3,14 +3,20 @@
     <p class="text-sm">
         {{subject.description}}
     </p>
+
     <div class="text-center mt-5">
-        <button (click)="onSubscribe(subject.id)" [disabled]="subject.subscribed" type="submit" class="rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm
+        <button (click)="onSubscribe(subject.id)" [disabled]="subject.subscribed && !canUnsubscribe" type="submit"
+            class="rounded-md px-3 py-2 text-sm font-semibold text-white shadow-sm
            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2
-           transition-colors" [ngClass]="subject.subscribed
+           transition-colors" [ngClass]="!subject.subscribed || canUnsubscribe
       ? 'bg-[#7763C5] hover:bg-[#6b57bf] focus-visible:ring-[#7763C5]'
       : 'bg-[#939393] hover:bg-[#7a7a7a] focus-visible:ring-[#939393]'">
             @if (subject.subscribed) {
+            @if(!canUnsubscribe){
             Déjà abonné
+            }@else{
+            Se désabonner
+            }
             } @else {
             S'abonner
             }
