@@ -11,17 +11,27 @@ import { SubjectInterface } from '../../interfaces/subjectInterface.interface';
 })
 export class SubjectComponent {
   @Input() subject!: SubjectInterface;
+  @Input() canUnsubscribe = true;
   @Output() onSubscribing = new EventEmitter<void>();
   onError = false;
 
   constructor(private subjectService: SubjectService) {}
 
   onSubscribe(subjectId: number): void {
-    this.subjectService.subjectSubscribe(subjectId).subscribe({
-      next: () => {
-        this.onSubscribing.emit();
-      },
-      error: (_) => (this.onError = true),
-    });
+    if (!this.subject.subscribed) {
+      this.subjectService.subjectSubscribe(subjectId).subscribe({
+        next: () => {
+          this.onSubscribing.emit();
+        },
+        error: (_) => (this.onError = true),
+      });
+    } else if (this.subject.subscribed && this.canUnsubscribe) {
+      this.subjectService.subjectUnsubscribe(subjectId).subscribe({
+        next: () => {
+          this.onSubscribing.emit();
+        },
+        error: (_) => (this.onError = true),
+      });
+    }
   }
 }

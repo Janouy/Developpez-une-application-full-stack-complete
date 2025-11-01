@@ -33,13 +33,13 @@ public class JwtService {
 
     /**
      * Générer un JWT signé.
-     * @param subject sujet du token (ex: email)
+     * @param userId sujet du token (ex: 12)
      * @return token compacté (JWS)
      */
-    public String generate(String subject) {
+    public String generate(Long userId) {
         long now = System.currentTimeMillis();
         return Jwts.builder()
-                .setSubject(subject)
+                .setSubject(String.valueOf(userId))
                 .setIssuer(issuer)
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + expirationMs))
@@ -50,18 +50,20 @@ public class JwtService {
     /**
      * Extraire le {@code sub} après validation (signature, expiration, issuer).
      * @param token JWT compacté
-     * @return le subject du token
+     * @return l'ID utilisateur extrait du token
      * @throws JwtException si le token est invalide/expiré/mal formé
      * @throws IllegalArgumentException si le token est null/vide
      */
-    public String getSubject(String token) {
-        return Jwts.parserBuilder()
+    public Long getUserId(String token) {
+        String subject = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .requireIssuer(issuer)
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+
+        return Long.valueOf(subject);
     }
 
 }

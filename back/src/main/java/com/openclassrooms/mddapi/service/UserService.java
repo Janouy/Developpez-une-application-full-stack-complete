@@ -79,7 +79,7 @@ public class UserService {
             repo.save(user);
         }
 
-        String token = credentialsChanged ? jwtService.generate(user.getEmail()) : null;
+        String token = credentialsChanged ? jwtService.generate(user.getId()) : null;
 
         return new ProfileResponse(user.getName(), user.getEmail(), token);
     }

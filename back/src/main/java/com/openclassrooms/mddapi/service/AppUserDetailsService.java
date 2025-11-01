@@ -39,4 +39,18 @@ public class AppUserDetailsService implements UserDetailsService {
                 .disabled(false)
                 .build();
     }
+
+    public UserDetails loadUserById(Long userId) throws UsernameNotFoundException {
+        User u = repo.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found for id=" + userId));
+        return org.springframework.security.core.userdetails.User
+                .withUsername(u.getEmail())
+                .password(u.getPassword())
+                .authorities(Collections.emptyList())
+                .accountExpired(false)
+                .accountLocked(false)
+                .credentialsExpired(false)
+                .disabled(false)
+                .build();
+    }
 }

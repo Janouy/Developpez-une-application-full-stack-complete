@@ -2,6 +2,7 @@
 <div class="flex justify-center">
     <div class="m-12 mt-6 lg:max-w-[1400px]">
         @if (posts$ | async; as posts) {
+        @if (posts.length > 0) {
         <div class="flex flex-col md:flex-row justify-center items-center md:justify-between mb-4 font-bold">
             <button routerLink="/add-post"
                 class="border px-4 py-2 rounded-md mb-4 md:mb-0 bg-[#7763C5] text-white cursor-pointer ">Créer
@@ -11,7 +12,6 @@
                     [icon]="faArrowDown" class="text-lg ml-2"></fa-icon>}@else{<fa-icon [icon]="faArrowUp"
                     class="text-lg ml-2"></fa-icon>}</div>
         </div>
-        @if (posts.length > 0) {
         <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 md:gap-12">
             <app-post *ngFor="let post of posts$ | async" [post]="post" />
         </div>

@@ -9,6 +9,7 @@ import { NoAuthGuard } from './guards/NoAuthGuard .guard';
 import { SinglePostComponent } from './pages/single-post/single-post.component';
 import { NewPostComponent } from './pages/new-post/new-post.component';
 import { SubjectsListComponent } from './pages/subjects-list/subjects-list.component';
+import { ProfileComponent } from './pages/profile/profile.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent, canActivate: [NoAuthGuard] },
@@ -24,6 +25,11 @@ export const routes: Routes = [
   {
     path: 'subjects',
     component: SubjectsListComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'me',
+    component: ProfileComponent,
     canActivate: [AuthGuard],
   },
   { path: '404', component: NotFoundComponent },
