@@ -27,7 +27,8 @@
             </nav>
             <div class="text-right ms-5 cursor-pointer"> <fa-icon [icon]="faUser" routerLink="/me"
                     (click)="mobileMenuIsOpen = false"
-                    class="text-xl rounded-full py-4 px-5 bg-[#D9D9D9] text-neutral-500"></fa-icon>
+                    class="text-xl rounded-full py-4 px-5 bg-[#D9D9D9] non-active-icon"
+                    routerLinkActive="active-icon"></fa-icon>
             </div>
         </div>
         }
@@ -46,7 +47,8 @@
                 [routerLinkActiveOptions]="{ exact: true }">Thèmes</a>
         </nav>
         <div class="text-right me-2"> <fa-icon [icon]="faUser" routerLink="/me" (click)="mobileMenuIsOpen = false"
-                class="text-xl rounded-full py-4 px-5 bg-[#D9D9D9] text-neutral-500"></fa-icon>
+                class="text-xl rounded-full py-4 px-5 bg-[#D9D9D9] non-active-icon"
+                routerLinkActive="active-icon"></fa-icon>
         </div>
     </div>
     }
