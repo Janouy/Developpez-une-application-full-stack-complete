@@ -3,13 +3,13 @@
     @if(me$ | async; as me){
     <form [formGroup]="userForm" (ngSubmit)="onUpdateUser()" class="flex flex-col mt-6 lg:max-w-[1400px]">
         <div class="font-bold text-2xl">Profil utilisateur</div>
-        <div class="h-5 mt-4 text-sm text-green-600 text-center">
+        <div class="h-5 my-4 text-sm text-green-600 text-center">
             @if(onSuccess){
             Votre compte a été mis à jour !
             }
 
         </div>
-        <div class="form-group mt-6">
+        <div class="form-group">
             <div
                 class="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-[#7763C5] focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-[#7763C5]">
                 <input id="name" type="text" name="name" formControlName="name" autocomplete="current-name"
@@ -21,7 +21,7 @@
             4 caractères requis
             }
         </div>
-        <div class="form-group mt-10">
+        <div class="form-group">
             <div
                 class="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-[#7763C5] focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-[#7763C5]">
                 <input id="email" type="text" name="email" formControlName="email" autocomplete="current-email"
@@ -33,49 +33,39 @@
                 }
             </div>
         </div>
-        <div class="form-group mt-10">
-            <label for="password" class="block text-sm/6 font-medium text-gray-900">Mot de passe</label>
-            <div class="mt-2">
-                <div
-                    class="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
-                    <input id="newPassword" [type]="hidePassword ? 'newPassword' : 'text'" name="newPassword"
-                        formControlName="newPassword" autocomplete="current-newPassword"
-                        class="block flex-grow bg-white py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6" />
-                    <div type="button" (click)="hidePassword = !hidePassword"
-                        class="flex items-center justify-center px-3 text-gray-500 hover:text-indigo-600 focus:outline-none cursor-pointer"
-                        [attr.aria-label]="'Afficher le mot de passe'" [attr.aria-pressed]="!hidePassword">
-                        @if (hidePassword) {
-                        <fa-icon [icon]="faEye" class="text-lg"></fa-icon>
-                        } @else {
+        <div class="form-group">
+            <div
+                class="flex items-center rounded-md bg-white pl-3 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600">
+                <input placeholder="password" id="newPassword" [type]="hidePassword ? 'password' : 'text'"
+                    name="newPassword" formControlName="newPassword" autocomplete="current-newPassword"
+                    class="block flex-grow bg-white py-1.5 pl-1 pr-3 text-base text-gray-900 placeholder:text-gray-400 focus:outline-none sm:text-sm/6" />
+                <div type="button" (click)="hidePassword = !hidePassword"
+                    class="flex items-center justify-center px-3 text-gray-500 hover:text-indigo-600 focus:outline-none cursor-pointer"
+                    [attr.aria-label]="'Afficher le mot de passe'" [attr.aria-pressed]="!hidePassword">
+                    @if (hidePassword) {
+                    <fa-icon [icon]="faEye" class="text-lg"></fa-icon>
+                    } @else {
+                    <fa-icon [icon]="faEyeSlash" class="text-lg"></fa-icon>
+                    }
+                    <ng-template #showIcon>
                         <fa-icon [icon]="faEyeSlash" class="text-lg"></fa-icon>
-                        }
-                        <ng-template #showIcon>
-                            <fa-icon [icon]="faEyeSlash" class="text-lg"></fa-icon>
-                        </ng-template>
-                    </div>
+                    </ng-template>
                 </div>
             </div>
+            <div class="h-5 mt-1 text-sm text-red-600">
+                @if (userForm.get('newPassword')?.hasError('pattern')){
+                Format incorrect.
+                }
+            </div>
         </div>
-        <div class="flex justify-center w-full mt-10">
+        <div class="flex justify-center w-full mt-6">
             <button type="submit"
                 class="cursor-pointer rounded-md bg-[#7763C5] px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-[#7763C5] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7763C5] w-1/2"
                 [disabled]="userForm.invalid">
                 Sauvegarder
             </button>
         </div>
-        <div class="h-5 mt-1 text-sm text-red-600">
-            @if (userForm.get('password')?.hasError('pattern')){
-            Le mot de passe doit comporter:
-            <ul>
-                <li>Plus de 8 caractères</li>
-                <li>1 chiffre</li>
-                <li>1 caractère spécial</li>
-                <li>1 lettre minuscule</li>
-                <li>1 lettre majuscule</li>
-            </ul>
-            }
-        </div>
-        <div class="h-5 mt-1 text-sm text-red-600 text-center">
+        <div class="h-5 my-4 text-sm text-red-600 text-center">
             @if(onError){
             Modification impossible
             }

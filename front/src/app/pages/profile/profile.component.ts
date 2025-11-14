@@ -73,6 +73,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   onUpdateUser(): void {
+    this.onSuccess = false;
+    this.onError = false;
     if (this.userForm.invalid) return;
     const userRequest = this.userForm.value as User;
     this.userService.updateUser(userRequest).subscribe({
